@@ -1,0 +1,28 @@
+.login-form {
+  margin: auto;
+  margin-top: 100px;
+  width: 450px;
+}
+
+.login-username {
+  margin: 10px;
+  padding: 15px
+}
+
+.project-main-div {
+  text-align: center;
+  width: 1400px;
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.todo-select-field {
+  margin: '10px';
+  min-width: '120px';
+}
+
+
+.project-select-field {
+  margin: '2px'
+}
