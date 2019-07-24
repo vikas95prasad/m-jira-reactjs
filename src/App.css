@@ -26,3 +26,30 @@
 .project-select-field {
   margin: '2px'
 }
+
+.pie-chart {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.report-table {
+  minWidth: 700
+}
+
+.report-table-main {
+  width: 100%;
+  margin-top: 10px;
+  overflowX: auto;
+}
+
+
+.outlined-select-todo-simple {
+  width: "1px";
+  padding: "1px 4px";
+}
+
+.heading-dashboard {
+  margin-top: 50px;
+  font-size: 29px;
+}

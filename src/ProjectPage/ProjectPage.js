@@ -96,6 +96,15 @@ class ProjectPage extends React.Component {
 
   render() {
       const { user, users } = this.props;
+
+      if(this.props && this.props.user && !(this.props.user.role === 'admin')){
+        return(
+          <div className='project-main-div'>
+            <h1>You are not authorized</h1>
+          </div>
+        )
+      }
+
       return (
         <div className='project-main-div'>
         { this.state.fabCreate &&
@@ -113,21 +122,21 @@ class ProjectPage extends React.Component {
                 <Table className='project-table-width'>
                   <TableHead>
                     <TableRow>
-                      <TableCell align="right">Name</TableCell>
-                      <TableCell align="right">Description</TableCell>
-                      <TableCell align="right">Status</TableCell>
-                      <TableCell align="right">Created At</TableCell>
-                      <TableCell align="right">Updated AT</TableCell>
+                      <TableCell align="center">Name</TableCell>
+                      <TableCell align="center">Description</TableCell>
+                      <TableCell align="center">Status</TableCell>
+                      <TableCell align="center">Created At</TableCell>
+                      <TableCell align="center">Updated AT</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {this.state.projects.map(row => (
                       <TableRow key={row.id}>
-                        <TableCell align="right">{row.name}</TableCell>
-                        <TableCell align="right">{row.description}</TableCell>
-                        <TableCell align="right">{row.status}</TableCell>
-                        <TableCell align="right"><Moment format="YYYY/MM/DD">{row.created_at}</Moment></TableCell>
-                        <TableCell align="right"><Moment format="YYYY/MM/DD">{row.updated_at}</Moment></TableCell>
+                        <TableCell align="center">{row.name}</TableCell>
+                        <TableCell align="center">{row.description}</TableCell>
+                        <TableCell align="center">{row.status}</TableCell>
+                        <TableCell align="center"><Moment format="YYYY/MM/DD">{row.created_at}</Moment></TableCell>
+                        <TableCell align="center"><Moment format="YYYY/MM/DD">{row.updated_at}</Moment></TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

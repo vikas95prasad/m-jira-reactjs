@@ -50,6 +50,7 @@ class TodoPage extends React.Component {
       userId: '',
       status: '',
       projectId: '',
+      developerId: '',
       table: true,
       labelWidth: 0,
       fabCreate: true,
@@ -82,7 +83,6 @@ class TodoPage extends React.Component {
 
   getTodos = () => {
     userService.getTodos().then(todos => {
-      console.log(todos)
       if (todos) {
         this.setState({
           todos: todos
@@ -96,10 +96,10 @@ class TodoPage extends React.Component {
   };
 
   onTodoSubmit = () => {
-    let payload = { 
+    let payload = {
                     title: this.state.title, 
                     description: this.state.description,
-                    user_id: this.state.userId,
+                    developer_id: this.state.developerId,
                     status: this.state.status,
                     project_id: this.state.projectId,
                     due_date: this.state.dueDate
@@ -121,8 +121,35 @@ class TodoPage extends React.Component {
     })
   }
 
+  onTodoChange = (id, from, event) => {
+    if (from === 'status') {
+      let payload = {status: event.target.value, id: id}
+      userService.updateTodoStatus(payload);
+      this.state.todos.forEach(function(item){
+        if(item.id === id){
+          item.status = event.target.value
+          return
+        }
+      });
+    }else if(from === 'developer'){
+      let user = this.state.users.find(function(user) {
+        return user.email === event.target.value;
+      });
+      let payload = {developer_id: user.id, id: id}
+      userService.updateTodoStatus(payload);
+      this.state.todos.forEach(function(item){
+        if(item.id === id){
+          item.developer = event.target.value
+          return
+        }
+      });
+    }
+    this.setState({ state: this.state });
+  };
+
   render() {
-    const { user, users } = this.props;
+    const { classes, user, users } = this.props;
+
     return (
       <div className='project-main-div'>
         { this.state.fabCreate &&
@@ -139,25 +166,56 @@ class TodoPage extends React.Component {
           <Table className='project-table-width'>
             <TableHead>
               <TableRow>
-                <TableCell align="right">Title</TableCell>
-                <TableCell align="right">Description</TableCell>
-                <TableCell align="right">Status</TableCell>
-                <TableCell align="right">Developer</TableCell>
-                <TableCell align="right">Project</TableCell>
-                <TableCell align="right">Created At</TableCell>
-                <TableCell align="right">Updated At</TableCell>
+                <TableCell align="center">Title</TableCell>
+                <TableCell align="center">Description</TableCell>
+                <TableCell align="center">Status</TableCell>
+                <TableCell align="center">Developer</TableCell>
+                <TableCell align="center">Project</TableCell>
+                <TableCell align="center">Created At</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {this.state.todos.map(row => (
                 <TableRow key={row.id}>
-                  <TableCell align="right">{row.title}</TableCell>
-                  <TableCell align="right">{row.description}</TableCell>
-                  <TableCell align="right">{row.status}</TableCell>
-                  <TableCell align="right">{row.developer}</TableCell>
-                  <TableCell align="right">{row.project}</TableCell>
-                  <TableCell align="right"><Moment format="YYYY/MM/DD">{row.created_at}</Moment></TableCell>
-                  <TableCell align="right"><Moment format="YYYY/MM/DD">{row.updated_at}</Moment></TableCell>
+                  <TableCell align="center">{row.title}</TableCell>
+                  <TableCell align="center">{row.description}</TableCell>
+                  <TableCell align="center" className='outlined-select-todo-simple'>
+                    <Select
+                      value={row.status}
+                      onChange={this.onTodoChange.bind(this, row.id, "status")}
+                      input={
+                        <OutlinedInput
+                          labelWidth={this.state.labelWidth}
+                          name="age"
+                          id="outlined-age-simple"
+                          className='outlined-select-todo-simple'
+                        />
+                      }
+                    >{this.state.displayStatus.map(row => (
+                      <MenuItem value={row}>{row.toUpperCase()}</MenuItem>
+                    ))}
+                    </Select>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Select
+                        value={row.developer}
+                        onChange={this.onTodoChange.bind(this, row.id, 'developer')}
+                        input={
+                          <OutlinedInput
+                            labelWidth={this.state.labelWidth}
+                            name="age"
+                            id="outlined-age-simple"
+                            className='outlined-select-todo-simple'
+                          />
+                        }
+                      >
+                      {this.state.users.map(row => (
+                        <MenuItem value={row.email}>{row.email}</MenuItem>
+                      ))}
+                    </Select>
+                  </TableCell>
+                  <TableCell align="center">{row.project}</TableCell>
+                  <TableCell align="center"><Moment format="YYYY/MM/DD">{row.created_at}</Moment></TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -235,8 +293,8 @@ class TodoPage extends React.Component {
                 </div>
                 <div>
                   <Select
-                    value={this.state.userId}
-                    onChange={this.handleChange.bind(this, 'userId')}
+                    value={this.state.developerId}
+                    onChange={this.handleChange.bind(this, 'developerId')}
                     input={
                       <OutlinedInput
                         labelWidth={this.state.labelWidth}

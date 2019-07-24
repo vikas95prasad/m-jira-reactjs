@@ -9,6 +9,7 @@ import { HomePage } from '../HomePage';
 import { LoginPage } from '../LoginPage';
 import { ProjectPage } from '../ProjectPage';
 import { TodoPage } from '../TodoPage';
+import { DashboardPage } from '../DashboardPage';
 import '../App.css'
 
 class App extends React.Component {
@@ -24,7 +25,7 @@ class App extends React.Component {
 
     render() {
         const { alert } = this.props;
-        // const exact = !!localStorage.getItem('user');
+        const exact = !!localStorage.getItem('user');
         return (
             <div className="jumbotron">
                 <div className="container">
@@ -35,6 +36,7 @@ class App extends React.Component {
                         <Router history={history}>
                             <div>
                                 <PrivateRoute excat path="/" component={HomePage} />
+                                <PrivateRoute path="/dashboard" component={DashboardPage} />
                                 <PrivateRoute path="/projects" component={ProjectPage} />
                                 <PrivateRoute path="/todos" component={TodoPage} />
                                 <Route path="/login" component={LoginPage} />

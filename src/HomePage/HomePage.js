@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -21,8 +21,8 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import ShopTwo from '@material-ui/icons/ShopTwo';
 
-
 import { userActions } from '../_actions';
+import { TodoPage } from '../TodoPage';
 
 class HomePage extends React.Component {
     state = {
@@ -52,15 +52,19 @@ class HomePage extends React.Component {
       console.log(name);
     }
 
-    render() {
-        const { user, users } = this.props;
-        const sideList = (
-          <div className='side-bar'>
-            <Divider />
-            <List >
-              <ListItem button component={Link} to="/">
+    redirectToTodoPage = () => {
+      // console.log('vikas');
+    }
+
+    sideList = (user_role) => (
+      <div className='side-bar'>
+        <Divider />
+        <List >
+          { user_role === 'admin' && 
+            <>
+              <ListItem button component={Link} to="/dashboard">
                 <ListItemIcon><InboxIcon /></ListItemIcon>
-                <ListItemText primary="Home"/>
+                <ListItemText primary="Dashboard"/>
               </ListItem>
               <Divider />
               <ListItem button component={Link} to="/projects" style={{paddingLeft: '20px'}}>
@@ -70,18 +74,22 @@ class HomePage extends React.Component {
                 <ListItemText inset primary="Projects" />
               </ListItem>
               <Divider />
-              <ListItem button component={Link} to="/todos">
-                <ListItemIcon><MailIcon /></ListItemIcon>
-                <ListItemText primary="Todos" />
-              </ListItem>
-            </List>
-            <Divider />
-          </div>
-        );
+            </>
+          }
+          <ListItem button component={Link} to="/todos" onClick={this.redirectToTodoPage()}>
+            <ListItemIcon><MailIcon /></ListItemIcon>
+            <ListItemText primary="Todos" />
+          </ListItem>
+        </List>
+        <Divider />
+      </div>
+    );
 
+    render() {
+        const { user, users } = this.props;
         return (
           <div>
-            {localStorage.getItem('user') && 
+            {user && 
                 <div className='app-header'>
                   <div>
                     <AppBar position="static">
@@ -108,18 +116,20 @@ class HomePage extends React.Component {
                       onClose={this.toggleDrawer('left', false)}
                       onOpen={this.toggleDrawer('left', true)}
                     >
-                      <div  tabIndex={0}
-                            role="button"
-                            onClick={this.toggleDrawer('left', false)}
-                            onKeyDown={this.toggleDrawer('left', false)}
-                            style={{width: '250px', marginTop: '73px'}} >
-                            {sideList}
+                      <div  
+                        tabIndex={0}
+                        role="button"
+                        onClick={this.toggleDrawer('left', false)}
+                        onKeyDown={this.toggleDrawer('left', false)}
+                        style={{width: '250px', marginTop: '73px'}} 
+                      >
+                        {this.sideList(user.role)}
                       </div>
                     </SwipeableDrawer>
                   </div>
               </div>
             }
-          </div>
+        </div>
         );
     }
 }

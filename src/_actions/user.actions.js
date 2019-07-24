@@ -17,7 +17,11 @@ function login(username, password) {
           .then(
               user => { 
                   dispatch(success(user));
-                  history.push('/');
+                  if (user.role === 'admin'){
+                    history.push('/dashboard');
+                  }else{
+                    history.push('/todos');
+                  }
               },
               error => {
                   dispatch(failure(error));
